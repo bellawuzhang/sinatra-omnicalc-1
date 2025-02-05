@@ -27,6 +27,26 @@ get("/square_root/results") do
 erb(:square_root_results)
 end
 
+# Payments
+get("/payment/new") do
+  erb(:new_payment_calc)
+end
+
+get("/payments/results") do
+@the_apr_input = params.fetch("apr_input").to_f
+@the_apr_input_converted = @the_apr_input.to_fs(:percentage, {:precision => 4})
+@the_years_input = params.fetch("years_input").to_f
+@the_principal_input = params.fetch("principal_input").to_f
+
+@the_apr_output = @the_apr_input / (100 * 12)
+@the_months_output = @the_years_input * 12
+@the_numerator = @the_apr_output * @the_principal_input
+@the_denominator = (1-(1 + @the_apr_output) ** -@the_months_output)
+@the_result = (@the_numerator / @the_denominator).to_fs(:currency)
+
+erb(:payment_results)
+end
+
 # Random Number Generatior
 get("/random/new") do
   erb(:new_random_number_generator)
